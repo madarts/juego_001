@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<title>Juego 001</title>
+		<style>
+        body {
+            padding: 0;
+            margin: 0;
+            
+            background: #333
+        }
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+        </style>
+        
+		<!--<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>-->
+		<script src="src/three.min.js"></script>
+        
+		<script src="src/variables.js"></script>
+		<script src="src/teclado.js"></script>
+		<script src="src/raton.js"></script>
+		<script src="src/colision.js"></script>
+	</head>
+	<body>
+		<script>
+             ////////////////////////////////////////
+            //*** ESCENA; CAMARA Y RENDERIZADO ***//
+    		/**/	var scene = new THREE.Scene();
+    		/**/	var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            /**/
+    		/**/	var renderer = new THREE.WebGLRenderer();
+    		/**/	renderer.setSize(window.innerWidth, window.innerHeight);
+    		/**/	document.body.appendChild(renderer.domElement);
+            //*** FINAL ESCENA; CAMARA Y RENDERIZADO ***//
+            /////////////////////////////////////////////
+
+
+
+
+
+             /////////////////
+            //*** SUELO ***//
+    		/**/	var geometrySuelo = new THREE.CubeGeometry(50,0,50, 50,0,50);
+    		/**/	var materialSuelo = new THREE.MeshBasicMaterial({color: 0x00ffff, wireframe: true});
+    		/**/	var suelo = new THREE.Mesh(geometrySuelo, materialSuelo);
+    		/**/	scene.add(suelo);
+            //*** FINAL SUELO ***//
+            //////////////////////
+            
+
+             /////////////////
+            //*** CUBO ***//
+    		/**/	var geometryCaja = new THREE.CubeGeometry(1,1,1, 1,1,1);
+    		/**/	var materialCaja = new THREE.MeshNormalMaterial();
+    		/**/	var caja = new THREE.Mesh(geometryCaja, materialCaja);
+    		/**/	scene.add(caja);
+            /**/    caja.position.x = 0.5;
+            /**/    caja.position.z = 0.5;
+            /**/    caja.position.y = 0.5;
+            //*** FINAL CUBO ***//
+            //////////////////////
+
+
+             /////////////////
+            //*** MAPA ***//
+    		/**/	var geometryMapa = new THREE.CubeGeometry(1,2,1, 1,1,1);
+    		/**/	var materialMapa = new THREE.MeshNormalMaterial();
+            
+                    var map = Array();
+                    
+                    for(i=0;i<mapas[mapa].length;i++){
+                        for(a=mapas[mapa][i][1];a<mapas[mapa][i][3];a++){
+                            for(e=mapas[mapa][i][0];e<mapas[mapa][i][2];e++){
+                                map[map.length] = new THREE.Mesh(geometryMapa, materialMapa);
+                                
+                                map[map.length-1].position.x = -24.5+e;
+                                map[map.length-1].position.z = -24.5+a;
+                                map[map.length-1].position.y = 1;
+                                
+                                scene.add(map[map.length-1]);
+                            }
+                        }
+                    }
+            //*** FINAL MAPA ***//
+            //////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             ///////////////////////////
+            //*** POSICION CAMARA ***//
+            /**/    camera.position.x = 0;
+            /**/    camera.position.z = 0;
+            /**/    camera.position.y = 34;
+            /**/    camera.rotation.set( -1.571, 0, 0);
+            //*** FINAL POSICION CAMARA ***//
+            ////////////////////////////////
+            
+            
+             ///////////////////////
+            //*** RENDERIZADO ***/
+                    suma = 0;
+            /**/    var render = function () {
+                        suma++;
+            /**/        requestAnimationFrame(render);
+                        
+                        if(suma%2 == 0){
+                            if(IZQUIERDA && !colision(caja.position.x, caja.position.z, -0.25, 0)) caja.position.x-=0.25;
+                            if(DERECHA && !colision(caja.position.x, caja.position.z, +0.25, 0))   caja.position.x+=0.25;
+                            if(ARRIBA && !colision(caja.position.x, caja.position.z, 0, -0.25))    caja.position.z-=0.25;
+                            if(ABAJO && !colision(caja.position.x, caja.position.z, 0, +0.25))     caja.position.z+=0.25;
+                        }
+			/**/	    renderer.render(scene, camera);
+            /**/    };
+            /**/
+			/**/    render();
+            //*** FINAL RENDERIZADO ***//
+            ////////////////////////////
+		</script>
+	</body>
+</html>
